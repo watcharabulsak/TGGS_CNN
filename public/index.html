@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TGGS Project</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <form action ="/uploadfile" method =post enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="exampleFormControlFile1" style="margin-bottom: 30px; font-size: 30px; color: blue;">House or Condo Classification</label>
+
+            <input type="file" class="form-control-file" id="exampleFormControlFile1" name = "file" style="margin-bottom: 10px;">
+            <input class="btn btn-primary" type="submit" value="uploads">
+          </div>
+        </form>
+      </div>    
+
+
+    <div class="container">
+      <form action ="/predict" method = "post" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="exampleFormControlFile1" style="margin-bottom: 30px; font-size: 30px; color: blue;"> Image Prediction </label>
+          <span>{{result}}</span>
+          <br>
+          <label name = "predict"></label>
+          <button type="button" class="btn btn-default"  name = "predict">predict</button>
+
+          <span>{{label}}</span>
+        </div>
+      </form>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js">
+    </script>
+    
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyAUkb0iyPZQrgQNomY-WJj-maCo5bU3RgQ",
+        authDomain: "tggs-cnn.firebaseapp.com",
+        databaseURL: "https://tggs-cnn-default-rtdb.firebaseio.com",
+        projectId: "tggs-cnn",
+        storageBucket: "tggs-cnn.appspot.com",
+        messagingSenderId: "295976218331",
+        appId: "1:295976218331:web:9dc4f9bdc06a4d60f4a6fe"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+  
+
+</body>
+</html>
