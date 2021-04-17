@@ -1,13 +1,13 @@
 from Image_cls import predictImage
 from flask import Flask, render_template,request,redirect,url_for, flash, send_file
-import pymysql
 import os
 from werkzeug.utils import secure_filename
 
 import firebase_admin
-from firebase_admin import ml
+from firebase_admin import App, ml
 from firebase_admin import credentials
-
+import json5
+ 
 
 # firebase_admin.initialize_app(
 #   credentials.Certificate('/path/to/your/service_account_key.json'),
@@ -16,19 +16,23 @@ from firebase_admin import credentials
 #   })
 
 
+config = {
+    #Hidden
+    apiKey: "AIzaSyAJsdM1eZr0JYT1sFNfuCtLhIKK6N21Hm0",
+    authDomain: "visaulab.firebaseapp.com",
+    projectId: "visaulab",
+    storageBucket: "visaulab.appspot.com",
+    messagingSenderId: "650456939169",
+    appId: "1:650456939169:web:83964f3d4d4192f89f8ee0"
+}
 
-# firebase_admin.initialize_app(
-#   credentials.Certificate('/path/to/your/service_account_key.json'),
-#   options={
-#       'storageBucket': 'your-storage-bucket',
-#   })
-
+firebase = firebase_admin.initialize_app(config)
 
 
 app = Flask(__name__, template_folder= 'public')
 
 # UPLOAD_FOLDER = '/Users/thiraprarom/TGGS/Project/upload_folder'
-# UPLOAD_FOLDER = 'gs://visaulab.appspot.com'
+UPLOAD_FOLDER = firebase.app().storage('gs://visaulab.appspot.com')
 
 # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -58,49 +62,6 @@ def index():
 #             print(filename)
 #             return render_template("index.html", result = filename)
 #             # return redirect('/return-files/'+ filename)
-
-
-
-config = {
-    #Hidden
-    apiKey: "AIzaSyAJsdM1eZr0JYT1sFNfuCtLhIKK6N21Hm0",
-    authDomain: "visaulab.firebaseapp.com",
-    projectId: "visaulab",
-    storageBucket: "visaulab.appspot.com",
-    messagingSenderId: "650456939169",
-    appId: "1:650456939169:web:83964f3d4d4192f89f8ee0"
-}
-
-firebase = pyrebase.initialize_app(config)
-storage = firebase.storage()
-auth = firebase.auth()
-
-@app.route('/', methods=['GET', 'POST'])
-#Login
-def basic():
-    unsuccessful = 'Please check your credentials'
-    successful = 'Login successful'
-    if request.method == 'POST':
-        email = request.form['name']
-        password = request.form['pass']
-        try:
-            auth.sign_in_with_email_and_password(email, password)
-            return render_template('index.html', s=successful)
-        except:
-            return render_template('index.html', us=unsuccessful)
-    return render_template('index.html')
-
-#Posting function
-@app.route('/uploadfile', methods=['GET','POST'])
-def uploadfile():
-    if request.method == 'POST':
-        try:
-            path_on_cloud = "images/newproduct.jpg"
-            path_local=request.form['file']
-            storage.child(path_on_cloud).put(path_local)
-            return render_template("index.html")
-        except:
-            return render_template("index.html")
 
 
 
@@ -134,4 +95,40 @@ def predictimage():
 
 if __name__ == "__main__":
     app.run(debug= True)
+ 
 
+@app.route('/messenger/message/send/picture/individual', methods=['post'])
+def send_individual_picture():
+    picture = request.files['picture']
+    temp = tempfile.namedtemporaryfile(delete= False)
+    picture.save(temp.name)
+    firebase.storage().put(temp.name)
+    # clean-up temp image
+    os.remove(temp.name) 
+    
+    
+@app.route('/messenger/message/send/picture/individual', methods=['post'])
+def send_individual_picture():
+    picture = request.files['picture']
+    firebase.storage().put(picture)
+
+@app.route('/messenger/message/send/picture/individual', methods=['post'])
+def send_individual_picture():
+    picture = request.files['picture']
+    firebase.storage().put(picture) 
+
+
+# @app.route('/', methods=['GET', 'POST'])
+# #Login
+# def basic():
+#     unsuccessful = 'Please check your credentials'
+#     successful = 'Login successful'
+#     if request.method == 'POST':
+#         email = request.form['name']
+#         password = request.form['pass']
+#         try:
+#             auth.sign_in_with_email_and_password(email, password)
+#             return render_template('index.html', s=successful)
+#         except:
+#             return render_template('index.html', us=unsuccessful)
+#     return render_template('index.html')

@@ -1,6 +1,5 @@
 {
   "hosting": {
-    "site":"visualab",
     "public": "public",
     "ignore": [
       "firebase.json",
